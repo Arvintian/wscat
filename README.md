@@ -22,6 +22,8 @@ Options:
   --cert <cert>                       specify a Client SSL Certificate (--connect only)
   --host <host>                       optional host
   --key <key>                         specify a Client SSL Certificate's key (--connect only)
+  -L, --location                      follow redirects (--connect only)
+  --max-redirs [num]                  maximum number of redirects allowed (--connect only) (default: 10)
   --no-color                          run without color
   --passphrase [passphrase]           specify a Client SSL Certificate Key's passphrase (--connect only). If you don't
                                       provide a value, it will be prompted for
