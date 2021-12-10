@@ -51,8 +51,8 @@ class Console extends EventEmitter {
 
   static get Types() {
     return {
-      Incoming: '< ',
-      Control: '',
+      Incoming: '',
+      Control: '< ',
       Error: 'error: '
     };
   }
@@ -62,18 +62,23 @@ class Console extends EventEmitter {
   }
 
   print(type, msg, color) {
+    let suffix = ''
+    if (programOptions.line || type != Console.Types.Incoming) {
+      suffix = '\n'
+    }
+
     if (tty.isatty(1)) {
       this.clear();
 
       if (programOptions.execute) color = type = '';
       else if (!programOptions.color) color = '';
 
-      this.stdout.write(color + type + msg + Console.Colors.Default + '\n');
+      this.stdout.write(color + type + msg + Console.Colors.Default + suffix);
       this.prompt();
     } else if (type === Console.Types.Incoming) {
-      this.stdout.write(msg + '\n');
+      this.stdout.write(msg + suffix);
     } else if (type === Console.Types.Error) {
-      this.stderr.write(type + msg + '\n');
+      this.stderr.write(type + msg + suffix);
     } else {
       // is a control message and we're not in a tty... drop it.
     }
@@ -99,7 +104,7 @@ function collect(val, memo) {
   return memo;
 }
 
-function noop() {}
+function noop() { }
 
 /**
  * The actual application
@@ -124,7 +129,7 @@ program
   .option(
     '--passphrase [passphrase]',
     "specify a Client SSL Certificate Key's passphrase (--connect only). " +
-      "If you don't provide a value, it will be prompted for"
+    "If you don't provide a value, it will be prompted for"
   )
   .option(
     '--proxy <[protocol://]host[:port]>',
@@ -133,7 +138,7 @@ program
   .option(
     '--slash',
     'enable slash commands for control frames (/ping, /pong, /close ' +
-      '[code [, reason]])'
+    '[code [, reason]])'
   )
   .option('-c, --connect <url>', 'connect to a WebSocket server')
   .option(
@@ -153,6 +158,7 @@ program
   .option('-s, --subprotocol <protocol>', 'optional subprotocol', collect, [])
   .option('-w, --wait <seconds>', 'wait given seconds after executing command')
   .option('-x, --execute <command>', 'execute command after connecting')
+  .option('--line', 'echo message with new line')
   .parse(process.argv);
 
 const programOptions = program.opts();
