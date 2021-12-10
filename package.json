@@ -25,5 +25,8 @@
   },
   "bin": {
     "wscat": "./bin/wscat"
+  },
+  "devDependencies": {
+    "pkg": "^4.4.0"
   }
 }
